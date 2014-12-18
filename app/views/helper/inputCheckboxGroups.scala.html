@@ -1,0 +1,16 @@
+@(field: play.api.data.Field, options: Seq[(String,String)], sufix: String, args: (Symbol,Any)*)(implicit handler: FieldConstructor, lang: play.api.i18n.Lang)
+
+@input(field, args.filter(_._1 != 'type):_*) { (id, name, value, htmlArgs) =>
+      @options.zipWithIndex.map { case (v, i) =>
+      <label class="checkbox">
+      <input type="checkbox" id="@(id)_@v._1" name="@(name)[@(i)]@if(sufix.length > 0){.@(sufix)}" value="@v._1"
+            @if(sufix.length > 0) {
+                @repeat(field, min = 0) { item => @if(item(sufix).value != None && item(sufix).value.get == v._1){ checked="checked" } }
+            } else {
+                @repeat(field, min = 0) { item => @if(item.value != None && item.value.get == v._1){ checked="checked" } }
+            }
+            @toHtmlArgs(htmlArgs)/>
+        @v._2
+      </label>
+      }
+}

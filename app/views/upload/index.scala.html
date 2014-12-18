@@ -1,0 +1,20 @@
+@import helper._
+@implicitField = @{
+    FieldConstructor(layout.f)
+}
+
+@main("Upload File", 'nav -> "upload") {
+    @form(routes.UploadFileController.upload, 'enctype -> "multipart/form-data", 'class -> "form-horizontal") {
+        <div class="control-group">
+            <label class="control-label" for="file">File</label>
+            <div class="controls">
+                <input id="file" name="file" type="file" onchange="$ ( '#filename' ).val ( $(this).val().substr($(this ).val().lastIndexOf('\\') + 1, $(this ).val( ).length) ) ;" style="display : none">
+                <div class="input-append">
+                    <input id="filename" class="input-medium" disabled="disabled" type="text">
+                    <a class="btn" onclick="$ ( 'input[id=file]' ).click ( ) ;">Browse</a>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+    }
+}

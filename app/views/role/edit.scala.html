@@ -1,0 +1,16 @@
+@(id: String, roleForm: Form[Role])
+
+    @import helper._
+    @implicitField = @{
+        FieldConstructor(layout.f)
+    }
+
+    @main("Edit Role", 'nav -> "role") {
+        @form(routes.RoleController.update(id), 'class -> "form-horizontal") {
+            @inputHidden(roleForm("id"))
+            @inputText(roleForm("name"), 'class -> "form-control", '_label -> "Role Name")
+
+            <button type="submit" class="btn btn-default">Submit</button>
+            <a href="@routes.RoleController.index()" class="btn btn-default">Cancel</a>
+        }
+    }

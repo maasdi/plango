@@ -1,0 +1,102 @@
+----------------------------------------------
+1. Database Information
+----------------------------------------------
+
+GIS/type=javax.sql.DataSource
+GIS/driver=com.informix.jdbc.IfxDriver
+GIS/url=jdbc:informix-sqli://172.18.28.153:9050/gisdb:INFORMIXSERVER=gisrhb2_tcp
+GIS/user=informix
+GIS/password=informix
+
+-----------------------------
+2. Vehicle Policy (from GIS to eIns)
+-----------------------------
+SELECT * FROM mtmaspol a
+WHERE a.mt_serial > ''
+AND a.mt_endt_seq = (SELECT MAX(b.mt_endt_seq)
+                        FROM mtmaspol b
+                        WHERE b.mt_serial = a.mt_serial
+                        AND   b.mt_rec_no = 0)
+AND   a.mt_rec_no  = 0
+AND a.mt_mas_dt > 'last process date' -- daily transfer
+ 
+AND mt_mas_dt BETWEEN "start_dt" AND "end_dt" ---on time exercise (when we implement the system)
+ 
+Vehicle
+======
+SELECT * FROM mtmasveh
+WHERE mtv_serial   = gv_mtmaspol.mt_serial
+AND   mtv_endt_seq = gv_mtmaspol.mt_endt_seq
+AND   mtv_rec_no   = gv_mtmaspol.mt_rec_no
+ 
+Extra Benefit
+===========
+SELECT * FROM mtmascew
+  WHERE vcw_serial   = gv_mtmasveh.mtv_serial
+  AND   vcw_endt_seq = gv_mtmasveh.mtv_endt_seq
+  AND   vcw_rec_no   = gv_mtmasveh.mtv_rec_no
+AND   vcw_veh_no   = gv_mtmasveh.mtv_veh_no
+ORDER BY vcw_cew_no, vcw_exb_code
+ 
+Driver
+======
+SELECT * FROM mtmasdrv
+WHERE vdr_serial   = gv_mtmasveh.mtv_serial
+AND   vdr_endt_seq = gv_mtmasveh.mtv_endt_seq
+AND   vdr_rec_no   = gv_mtmasveh.mtv_rec_no
+AND   vdr_veh_no   = gv_mtmasveh.mtv_veh_no
+ORDER BY vdr_drv_no
+ 
+Tables:
+mtmaspol
+mtmasveh
+mtmascew
+mtmasdrv
+
+
+-------------------------------------------------
+3. Renewal Data (from GIS to eins)
+-------------------------------------------------
+SELECT * FROM mtrenpol
+WHERE mt_serial > '' "
+AND   mt_endt_seq = 0
+AND   mt_rec_no = 0
+AND mt_trans_ind IN ('N', 'R')  
+AND mt_expiry_dt BETWEEN '", gv_month_from, " ' AND '", gv_month_to, "'",
+ 
+ 
+Daily extraction:
+Daily extraction for those cases already extracted in monthly process, but endorsement passed
+SELECT * FROM mtrenpol ",
+WHERE mt_serial > '' ",
+AND   mt_endt_seq = 0 ",
+AND   mt_rec_no = 0 ",
+AND mt_trans_ind IN ('E', 'C') "
+
+
+----------------------------------------------------
+4. Covernote Submission (from eIns to GIS)
+----------------------------------------------------
+
+For table structures, please refer to documents that I sent to you previously for policy data (incoming).
+ 
+ 
+NB, endorsement, renewal submission
+==============================
+int_mtcnpol
+icp_acc_grp - Please assign EINS for account group
+icp_purpose    - to donate the document type. example:  NB - New Business, RN- Renewal, EXT - Extension (endorsement), CHGENG - Change of Engine
+ 
+int_mtcnveh
+int_mtcncew
+int_mtcndrv
+
+-----------------------------------------------------
+5. Payment Confirmation Submission (from eIns to GIS)
+-----------------------------------------------------
+
+int_paymaster
+ipm_acc_grp -   Please assign EINS for account group
+ 
+int_paydetail
+int_payitem

@@ -1,0 +1,39 @@
+# global
+application.name=Plango
+
+error.record.notfound=Record not found
+success.create={0} {1} has been created
+success.update={0} {1} has been updated
+success.delete={0} {1} has been deleted
+error.file.missing=File is missing
+error.upload=Failed to upload file
+success.upload=File has been upload successfully
+
+label.search=Search
+label.edit=Edit
+label.delete=Delete
+label.yes=Yes
+label.no=No
+label.confirm=Confirm
+
+# login
+login.required=Username and password are required
+login.invalid=Invalid username or password
+logout.message=You've been logged out
+
+# user
+label.user=User
+label.user.add=Add New User
+label.profile=Your Profile
+message.user.delete.confirm=Do you want to delete user
+message.user.exists=User with username {0} already exists
+message.user.notexists=User with username {0} does not exists
+message.profile.update=Your profile has been updated
+message.profile.invalidformat=Format not accepted, please use {0}
+
+# role
+label.role=Role
+label.role.add=Add New Role
+error.role.refs=Role {0} cannot be deleted, because of it is use by user
+message.role.delete.confirm=Do you want to delete role
+message.role.exists=Role with name {0} already exists

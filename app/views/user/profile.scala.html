@@ -1,0 +1,35 @@
+@(userForm: play.data.Form[User])
+
+@import helper._
+@implicitField = @{
+    FieldConstructor(layout.f)
+}
+
+@main("Your Profile", 'nav -> "profile") {
+    @form(routes.ProfileController.updateProfile(), 'enctype -> "multipart/form-data") {
+        @inputHidden(userForm("username"))
+        @inputHidden(userForm("password"))
+        @inputHidden(userForm("profile.profile_img"))
+        <div class="control-group">
+            <label class="control-label" for="profile_picture">Profile Picture</label>
+            <div class="controls">
+                <div class="row-fluid">
+                    <div class="span1">
+                        <img class="thumbnail" width="100px" src="@routes.Assets.at(ProfileController.PROFILE_DIR + userForm("profile.profile_img").valueOr("person.png"))">
+                    </div>
+                    <div class="span11">
+                        <input id="profile_picture" name="profile_picture" type="file" accept="image/*" onchange="$('#filename').html($(this).val().substr($(this ).val().lastIndexOf('\\') + 1, $(this ).val( ).length))" style="display : none">
+                        <div>
+                            <a class="btn btn-info" onclick="$ ( 'input[id=profile_picture]' ).click ( ) ;">Browse new picture</a>
+                            <label id="filename">Choose picture from your computer</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @inputText(userForm("name"), '_label -> "Name")
+        @inputText(userForm("email"), '_label -> "Email")
+
+        <button type="submit" class="btn btn-default">Update profile</button>
+    }
+}

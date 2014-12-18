@@ -1,0 +1,24 @@
+@(id: String, userForm: Form[User])
+
+    @import helper._
+    @implicitField = @{
+        FieldConstructor(layout.f)
+    }
+
+    @main("Edit User", 'nav -> "user") {
+        @form(routes.UserController.update(id), 'class -> "form-horizontal") {
+            @inputHiddenAsLabel(userForm("username"), '_label -> "Username", 'style -> "margin-bottom:5px;")
+            @inputHidden(userForm("password"))
+            @inputHidden(userForm("authToken"))
+            @inputText(userForm("name"), 'class -> "form-control", '_label -> "Fullname")
+            @inputText(userForm("email"), 'class -> "form-control", '_label -> "Email")
+            @inputRadioGroups(userForm("enabled"), options = Seq("true" -> "Enable", "false" -> "Disable")
+                , 'showConstraints -> false, '_label -> "Enabled")
+            @inputCheckboxGroups(userForm("user_roles"), options(Role.options), "id"
+                , '_error -> userForm("roles").error.map(_.withMessage("Select one or more roles"))
+                , '_label -> "Roles")
+
+            <button type="submit" class="btn btn-default">Submit</button>
+            <a href="@routes.UserController.index()" class="btn btn-default">Cancel</a>
+        }
+    }

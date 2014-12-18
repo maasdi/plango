@@ -1,0 +1,49 @@
+@(page: util.Pagination[_])
+
+    @import helper._
+
+    @page_link(page: Int) = @{
+        request.uri match {
+            case x if (x.contains("page=")) => {
+                request.uri.replaceAll("page=([^&]*)", "page=" + page)
+            }
+            case x if (x.contains("?")) => {
+                request.uri + "&page=" + page
+            }
+            case _ => {
+                request.uri + "?page=" + page
+            }
+        }
+    }
+
+    @if(page.totalPage > 1) {
+        <div class="row-fluid">
+            <div class="span6">
+                <span>Showing @{page.offset + 1} to @{page.offset + page.itemSize} of @{page.totalRows} entries</span>
+            </div>
+            <div class="span6">
+                <div class="pagination pull-right">
+                    <ul>
+                        <li class="prev@if(page.first) { disabled }">
+                            <a href="@page_link(1)">First</a>
+                        </li>
+                        <li class="prev@if(page.first) { disabled }">
+                            <a href="@page_link(page.prev)">&leftarrow;</a>
+                        </li>
+                        @for(i <- page.start to page.end) {
+                            <li @if(i == page.page) {
+                                class="active"}>
+                                <a href="@page_link(i)">@i </a>
+                            </li>
+                        }
+                        <li class="next@if(page.last) { disabled }">
+                            <a href="@page_link(page.next)">&rightarrow;</a>
+                        </li>
+                        <li class="next@if(page.last) { disabled }">
+                            <a href="@page_link(page.totalPage)">Last</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }

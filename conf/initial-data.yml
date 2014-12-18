@@ -1,0 +1,50 @@
+roles:
+    - !!models.Role
+        id:         1
+        name:       USER
+
+    - !!models.Role
+        id:         2
+        name:       ADMIN
+
+users:
+
+    - !!models.User
+        username:   admin
+        password:   secret
+        email:      guillaume@sample.com
+        name:       Guillaume Bort
+        enabled:    true
+        user_roles:
+          - !!models.Role
+              id:   2
+
+    - !!models.User
+        username:   user
+        password:   secret
+        email:      maxime@sample.com
+        name:       Maxime Dantec
+        enabled:    true
+        user_roles:
+          - !!models.Role
+              id:   1
+
+    - !!models.User
+        username:   sadek
+        password:   secret
+        email:      sadek@sample.com
+        name:       Sadek Drobi
+        enabled:    true
+        user_roles:
+          - !!models.Role
+              id:   1
+
+    - !!models.User
+        username:   erwan
+        password:   secret
+        email:      erwan@sample.com
+        name:       Erwan Loisant
+        enabled:    true
+        user_roles:
+          - !!models.Role
+              id:   1

@@ -1,0 +1,81 @@
+@(page: util.Pagination[User])
+
+    @import helper.form
+    @import helper.pagination
+    @import helper.messages
+    @import play.i18n.Messages
+
+    @main("List User", 'nav -> "user") {
+        <div class="row-fluid">
+            <div class="span6">
+            @form(routes.UserController.search(), 'class -> "form-search") {
+                <input type="text" name="search" class="input-medium search-query" placeholder="Username">
+                <button type="submit" class="btn">@Messages.get("label.search")</button>
+            }
+            </div>
+            <div class="span6">
+                <a class="btn btn-primary pull-right" id="add" href="@routes.UserController.add()">@Messages.get("label.user.add")</a>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th width="5%">NO.</th>
+                        <th width="20%">USERNAME</th>
+                        <th width="45%">FULL NAME</th>
+                        <th width="15%">ENABLED</th>
+                        <th width="15%">ACTION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for((user, idx) <- page.items.zipWithIndex) {
+                        <tr>
+                            <td>@{idx + (page.offset + 1)}</td>
+                            <td>@user.username</td>
+                            <td>@user.name</td>
+                            <td>@user.enabled</td>
+                            <td>
+                                <a href="@routes.UserController.edit(user.username)">@Messages.get("label.edit")</a>
+                                | <a href="#delete-user-dialog" class="delete-user" data-href="@routes.UserController.delete(user.username)" data-name="@user.name" data-toggle="modal">@Messages.get("label.delete")</a>
+                            </td>
+                        </tr>
+                    }
+                    @if(page.items.isEmpty) {
+                        <tr>
+                            <td colspan="5">@Messages.get("error.record.notfound")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @pagination(page)
+        </div>
+        <div id="delete-user-dialog" class="modal hide">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close" type="button">&times;</button>
+                <h3>@Messages.get("label.confirm")</h3>
+            </div>
+            <div class="modal-body">
+                <p>@Messages.get("message.user.delete.confirm") <b><span id="delete-user-dialog-name"></span></b> ?</p>
+                <form id="delete-user-form" method="post"></form>
+            </div>
+            <div class="modal-footer">
+                <a data-dismiss="modal" id="btn-delete-user" class="btn btn-primary" href="#">@Messages.get("label.yes")</a>
+                <a data-dismiss="modal" class="btn" href="#">@Messages.get("label.no")</a>
+            </div>
+        </div>
+        <script type="text/javascript">
+        $ ( document ).ready ( function ( ) {
+            $ ( '.delete-user' ).click ( function ( ) {
+                var link = $ ( this ).data ( 'href' ) ;
+                var name = $ ( this ).data ( 'name' ) ;
+                $ ( '#delete-user-form' ).attr ( 'action', link ) ;
+                $ ( '#delete-user-dialog-name' ).html ( name ) ;
+            } ) ;
+
+            $ ( '#btn-delete-user' ).click ( function ( ) {
+                $ ( '#delete-user-form' ).submit ( ) ;
+            } ) ;
+        } ) ;
+        </script>
+    }
