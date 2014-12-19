@@ -2,7 +2,6 @@ package security;
 
 import be.objectify.deadbolt.core.models.Subject;
 import be.objectify.deadbolt.java.AbstractDeadboltHandler;
-import controllers.SecurityController;
 import controllers.routes;
 import org.apache.commons.lang3.StringUtils;
 import play.libs.F;
@@ -45,6 +44,6 @@ public class SecurityHandler extends AbstractDeadboltHandler {
 
     @Override
     public Subject getSubject(Http.Context context) {
-        return (Subject) context.args.get(SecurityController.AUTH_CONTEXT_USER);
+        return (Subject) context.args.get(AuthKey.AUTH_CONTEXT_USER);
     }
 }

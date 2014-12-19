@@ -11,6 +11,7 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
+import security.AuthKey;
 import views.html.login;
 
 /**
@@ -21,27 +22,20 @@ import views.html.login;
  */
 public class SecurityController extends Controller {
 
-    public static final String AUTH_TOKEN_HEADER = "X-AUTH-TOKEN";
-    public static final String AUTH_MODE_HEADER = "X-AUTH-MODE";
-    public static final String AUTH_CLIENT_MODE = "CLIENT-AUTH";
-    public static final String AUTH_TOKEN = "authToken";
-    public static final String AUTH_CONTEXT_USER = "user";
-    public static final String AUTH_USERNAME = "authUsername";
-
     public static User getUser() {
-        return (User) Http.Context.current().args.get(AUTH_CONTEXT_USER);
+        return (User) Http.Context.current().args.get(AuthKey.AUTH_CONTEXT_USER);
     }
 
     private static Boolean isClientAuth() {
-        String[] authModeHeaderValues = request().headers().get(SecurityController.AUTH_MODE_HEADER);
+        String[] authModeHeaderValues = request().headers().get(AuthKey.AUTH_MODE_HEADER);
         if ((authModeHeaderValues != null) && (authModeHeaderValues.length == 1) && authModeHeaderValues[0] != null) {
-            return AUTH_CLIENT_MODE.equals(authModeHeaderValues[0]);
+            return AuthKey.AUTH_CLIENT_MODE.equals(authModeHeaderValues[0]);
         }
         return Boolean.FALSE;
     }
 
     public static Result login() {
-        String username = session(AUTH_USERNAME);
+        String username = session(AuthKey.AUTH_USERNAME);
         if (StringUtils.isNotBlank(username)) {
             if (User.find().byId(username) == null) {
                 // invalidate session
@@ -69,7 +63,7 @@ public class SecurityController extends Controller {
             }
             String authToken = user.createToken();
             ObjectNode authTokenJson = Json.newObject();
-            authTokenJson.put(AUTH_TOKEN, authToken);
+            authTokenJson.put(AuthKey.AUTH_TOKEN, authToken);
             return ok(authTokenJson);
         } else {
             if (loginForm.hasErrors()) {
@@ -83,7 +77,7 @@ public class SecurityController extends Controller {
                 return badRequest(login.render(loginForm));
             }
 
-            session().put(AUTH_USERNAME, user.username);
+            session().put(AuthKey.AUTH_USERNAME, user.username);
             return redirect(routes.Application.index());
         }
     }
