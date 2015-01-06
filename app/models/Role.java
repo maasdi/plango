@@ -45,8 +45,20 @@ public class Role extends Model implements be.objectify.deadbolt.core.models.Rol
         return sb.toString();
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @Override
     public String getName() {
         return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
